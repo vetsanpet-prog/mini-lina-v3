@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="theme-color" content="#ff8fc7"/>
+  <title>Mini Lina Robot V3</title>
+  <style>
+    :root{--ink:#252b3d;--muted:#687083;--pink:#ff8fc7;--pink2:#ffd8eb;--blue:#8be3ff;--yellow:#ffe984;--purple:#b89cff;--green:#9df0bd;--card:#ffffffd9}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink)}
+    body{background:radial-gradient(circle at 15% 10%,#fff6b9 0 14%,transparent 30%),radial-gradient(circle at 85% 20%,#ffd7ec 0 16%,transparent 32%),linear-gradient(135deg,#fff9dd,#e8f8ff,#fff0f7);overflow-x:hidden}
+    .app{max-width:1180px;margin:0 auto;padding:14px;display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+    @media(max-width:880px){.app{grid-template-columns:1fr;padding:10px}.stage{min-height:620px}.side{min-height:520px}.hello h1{font-size:32px}}
+    .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid #fff;border-radius:34px;box-shadow:0 24px 70px #56607024}
+    .stage{position:relative;overflow:hidden;min-height:720px;padding:22px}
+    .badge{position:absolute;right:16px;top:16px;background:#ecfff3;color:#10864b;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:900;z-index:3}
+    .hello{padding-right:140px}.hello .top{font-size:14px;font-weight:950;color:#d84d9b;margin-bottom:6px}.hello h1{font-size:46px;line-height:1.02;margin:0}.hello p{font-size:17px;line-height:1.45;color:var(--muted);max-width:640px}
+    @media(max-width:560px){.hello{padding-right:0;padding-top:28px}.badge{left:16px;right:auto;top:12px}.hello p{font-size:15px}}
+    .sky{position:absolute;inset:0;pointer-events:none;overflow:hidden}.star{position:absolute;font-size:20px;animation:twinkle 2.5s ease-in-out infinite}.star:nth-child(1){left:9%;top:17%;animation-delay:.1s}.star:nth-child(2){right:9%;top:36%;animation-delay:.5s}.star:nth-child(3){left:22%;bottom:18%;animation-delay:1s}.star:nth-child(4){right:20%;bottom:12%;animation-delay:1.5s}@keyframes twinkle{50%{transform:scale(1.35) rotate(12deg);opacity:.65}}
+    .robot-zone{height:375px;position:relative;margin-top:0}
+    .robot{position:absolute;left:50%;top:28px;transform:translateX(-50%);width:338px;height:350px;animation:float 3.3s ease-in-out infinite;filter:drop-shadow(0 24px 20px #60708625)}
+    @keyframes float{0%,100%{transform:translateX(-50%) translateY(0) rotate(-.4deg)}50%{transform:translateX(-50%) translateY(-11px) rotate(.5deg)}}
+    .hair{position:absolute;left:50%;top:-2px;transform:translateX(-50%);width:220px;height:86px;border-radius:70px 70px 20px 20px;background:linear-gradient(135deg,#7c5cff,#ff91c6);border:5px solid #262b3d;z-index:1}
+    .bow{position:absolute;left:50%;top:-35px;transform:translateX(-50%);font-size:54px;z-index:5;filter:drop-shadow(0 5px 3px #0002)}
+    .antenna{position:absolute;left:50%;top:-39px;width:7px;height:33px;border-radius:8px;background:#262b3d;z-index:0}.light{position:absolute;left:50%;top:-61px;transform:translateX(-50%);width:28px;height:28px;background:#ffe45d;border:4px solid #262b3d;border-radius:50%;animation:lamp 1.4s infinite}@keyframes lamp{50%{box-shadow:0 0 30px #ffdd44;transform:translateX(-50%) scale(1.12)}}
+    .ear{position:absolute;top:104px;width:51px;height:82px;border:5px solid #262b3d;background:linear-gradient(#ffd7ec,#ff99c9);border-radius:50px;z-index:1;animation:ear 2.6s ease-in-out infinite}.ear.left{left:22px}.ear.right{right:22px;animation-delay:.55s}@keyframes ear{50%{transform:rotate(8deg) translateY(-2px)}}
+    .head{position:absolute;left:50%;top:22px;transform:translateX(-50%);width:235px;height:220px;border:5px solid #262b3d;border-radius:58px;background:linear-gradient(160deg,#effdff,#98e7ff 72%,#78d7ff);z-index:2;box-shadow:inset -16px -18px 0 #61c9ee55}
+    .eye{position:absolute;top:92px;width:58px;height:61px;background:white;border-radius:50%;box-shadow:inset 0 5px 12px #0002}.eye.left{left:43px}.eye.right{right:43px}.pupil{position:absolute;left:15px;top:16px;width:28px;height:28px;border-radius:50%;background:#23283a;animation:blink 4.2s infinite}.shine{position:absolute;left:6px;top:5px;width:8px;height:8px;background:#fff;border-radius:50%}@keyframes blink{0%,43%,49%,100%{transform:scaleY(1)}46%{transform:scaleY(.06)}}
+    .cheek{position:absolute;top:154px;width:36px;height:18px;background:#ff8fc799;border-radius:50%}.cheek.left{left:27px}.cheek.right{right:27px}
+    .mouth{position:absolute;left:50%;top:158px;transform:translateX(-50%);width:56px;height:19px;border:5px solid #23283a;border-top:0;background:#ff72aa;border-radius:0 0 44px 44px;transition:.12s}.speaking .mouth{animation:talk .42s infinite}@keyframes talk{0%,100%{width:46px;height:14px}35%{width:82px;height:36px}70%{width:56px;height:25px}}
+    .body{position:absolute;left:50%;top:235px;transform:translateX(-50%);width:188px;height:112px;border:5px solid #262b3d;border-radius:40px;background:linear-gradient(150deg,#f5dbff,#ffc0e4);z-index:2;box-shadow:inset -14px -14px 0 #d985ff33}.screen{position:absolute;left:50%;top:28px;transform:translateX(-50%);background:#fff;border:3px solid #262b3d;border-radius:18px;padding:9px 16px;font-weight:1000;color:#9c3cc0}
+    .arm{position:absolute;top:250px;width:42px;height:100px;border:5px solid #262b3d;background:linear-gradient(#b9f1ff,#77d8f7);border-radius:30px;transform-origin:top center;z-index:1}.arm.left{left:43px;animation:wave 1.25s ease-in-out infinite}.arm.right{right:43px;animation:wave2 2.2s ease-in-out infinite}@keyframes wave{0%,100%{transform:rotate(-23deg)}50%{transform:rotate(31deg)}}@keyframes wave2{0%,100%{transform:rotate(18deg)}50%{transform:rotate(-5deg)}}
+    .foot{position:absolute;top:335px;width:56px;height:35px;border:5px solid #262b3d;background:#eef2f7;border-radius:24px}.foot.left{left:99px}.foot.right{right:99px}
+    .bubble{position:relative;z-index:2;margin:2px auto 0;max-width:720px;background:white;border-radius:30px;padding:18px 20px;box-shadow:0 16px 42px #00000014;text-align:center;font-size:20px;line-height:1.42;font-weight:850}
+    .quick{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:15px;position:relative;z-index:2}
+    button{border:0;border-radius:18px;padding:13px 15px;font-weight:950;cursor:pointer;box-shadow:0 10px 18px #00000012;color:#263044;background:white}button:active{transform:scale(.98)}button:disabled{opacity:.55}
+    .quick button:nth-child(1){background:#fff0a9}.quick button:nth-child(2){background:#d9f8ff}.quick button:nth-child(3){background:#ffd8eb}.quick button:nth-child(4){background:#dcffd8}.quick button:nth-child(5){background:#eadcff}.quick button:nth-child(6){background:#d7e6ff}
+    .progress{margin:15px auto 0;max-width:650px;background:#fff;border-radius:24px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 26px #0000000c}.stars{font-size:24px;letter-spacing:2px}.bar{height:14px;flex:1;background:#edf0f5;border-radius:999px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#ffe45d,#ff8fc7);width:0%;transition:.3s}.score{font-weight:1000}
+    .side{min-height:720px;padding:14px;display:flex;flex-direction:column}.sideHead{display:flex;align-items:center;justify-content:space-between;padding:4px 5px 12px}.sideHead h2{margin:0;font-size:24px}.sideHead p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+    .mode{display:flex;gap:6px}.round{width:46px;height:46px;border-radius:50%;padding:0}.on{background:#262b3d;color:white}
+    .log{flex:1;background:#f7f8fb;border-radius:26px;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:10px}.msg{max-width:86%;padding:12px 14px;border-radius:23px;line-height:1.38;font-weight:650;white-space:pre-wrap}.bot{align-self:flex-start;background:#fff}.kid{align-self:flex-end;background:#77d9ff;color:#10263c}
+    .inputbar{display:flex;gap:8px;margin-top:12px}.inputbar input{height:50px;flex:1;border:1px solid #d9e1ea;border-radius:19px;padding:0 14px;font-size:15px;outline:0}.inputbar input:focus{box-shadow:0 0 0 4px #9de6ff66}.mic{background:#ffe0ef}.mic.recording{background:#ff6aa6;color:white;animation:pulseMic 1s infinite}@keyframes pulseMic{50%{transform:scale(1.08);box-shadow:0 0 0 8px #ff6aa633}}.send{background:#bdf0ff}
+    .panel{margin-top:10px;background:#fff8;border-radius:22px;padding:12px;font-size:13px;color:var(--muted);line-height:1.5}.row{display:flex;gap:8px;margin-top:8px}.row input{height:40px;flex:1;border:1px solid #d9e1ea;border-radius:14px;padding:0 10px}.small{padding:10px 12px;border-radius:14px;background:#fff}.pill{display:inline-block;margin:4px 4px 0 0;padding:7px 9px;background:#fff;border-radius:999px;font-weight:800;color:#4b5567}
+    .sleep body{} .sleepy{filter:brightness(.8)}.sleepOverlay{position:absolute;inset:0;background:linear-gradient(#0f1c45aa,#2a155799);z-index:2;pointer-events:none;display:none}.sleep .sleepOverlay{display:block}.moon{position:absolute;right:44px;top:74px;font-size:64px;animation:moon 3s ease-in-out infinite}@keyframes moon{50%{transform:translateY(-8px)}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="stage" class="card stage">
+      <div class="sky"><span class="star">⭐</span><span class="star">✨</span><span class="star">🌟</span><span class="star">💫</span></div>
+      <div class="sleepOverlay"><div class="moon">🌙</div></div>
+      <div class="badge">🛡️ Güvenli çocuk modu</div>
+      <div class="hello">
+        <div class="top">🎀 Mini Lina Robot V3 V3</div>
+        <h1>Merhaba, ben Lina!</h1>
+        <p>Masal anlatırım, bilmece sorarım, hayvanları ve renkleri öğretirim. Yıldız kazanırız, uyku modunda iyi geceler hikayesi okurum.</p>
+      </div>
+      <div class="robot-zone">
+        <div id="robot" class="robot">
+          <div class="antenna"></div><div class="light"></div><div class="ear left"></div><div class="ear right"></div>
+          <div class="hair"></div><div class="bow">🎀</div>
+          <div class="head">
+            <div class="eye left"><div class="pupil"><div class="shine"></div></div></div>
+            <div class="eye right"><div class="pupil"><div class="shine"></div></div></div>
+            <div class="cheek left"></div><div class="cheek right"></div><div class="mouth"></div>
+          </div>
+          <div class="arm left"></div><div class="arm right"></div>
+          <div class="body"><div class="screen">LİNA</div></div>
+          <div class="foot left"></div><div class="foot right"></div>
+        </div>
+      </div>
+      <div id="bubble" class="bubble">Merhaba minik arkadaşım! Bugün beraber ne oynayalım?</div>
+      <div class="quick">
+        <button onclick="quick('Masal anlat')">🌙 Masal</button>
+        <button onclick="quick('Bilmece sor')">🧩 Bilmece</button>
+        <button onclick="quick('Hayvan oyunu')">🐰 Hayvan</button>
+        <button onclick="quick('Renk oyunu')">🎨 Renk</button>
+        <button onclick="quick('Sayı sayalım')">🔢 Sayı</button>
+        <button onclick="sleepMode()">😴 Uyku modu</button>
+      </div>
+      <div class="progress">
+        <div class="stars" id="starIcons">☆☆☆☆☆</div><div class="bar"><div id="fill" class="fill"></div></div><div id="score" class="score">0</div>
+      </div>
+    </section>
+    <section class="card side">
+      <div class="sideHead">
+        <div><h2>Sohbet</h2><p>V3: mikrofon kaydı → yazıya çevirme → ChatGPT → ses.</p></div>
+        <div class="mode">
+          <button id="voiceBtn" class="round on" onclick="toggleVoice()">🔊</button>
+          <button id="aiBtn" class="round on" onclick="toggleAI()">🤖</button>
+        </div>
+      </div>
+      <div id="log" class="log"></div>
+      <div class="inputbar">
+        <button id="micBtn" class="mic" onclick="toggleRecording()">🎙️</button>
+        <input id="text" placeholder="Lina'ya bir şey söyle..." onkeydown="if(event.key==='Enter')send()"/>
+        <button class="send" onclick="send()">Gönder</button>
+      </div>
+      <div class="panel">
+        <b>Küçük hafıza:</b> Lina adı ve yıldızları bu cihazda saklar.
+        <div class="row"><input id="childName" placeholder="Kızının adı"/><button class="small" onclick="saveName()">Kaydet</button></div>
+        <div style="margin-top:8px"><span class="pill">Masal kütüphanesi</span><span class="pill">Yıldız sistemi</span><span class="pill">Uyku modu</span><span class="pill">Güvenli cevap filtresi</span></div>
+        <div style="margin-top:8px">🤖 düğmesi: Sunucuya API anahtarı eklenirse gerçek ChatGPT modu açılır; yoksa Lina güvenli yerel modda çalışır.</div>
+      </div>
+    </section>
+  </div>
+<script>
+const $=id=>document.getElementById(id); const robot=$('robot'), bubble=$('bubble'), log=$('log'), text=$('text'), stage=$('stage');
+let voiceOn=true, aiOn=true, sleep=false;
+let mediaRecorder=null, chunks=[], stream=null, isRecording=false;
+let points=Number(localStorage.getItem('lina_points')||0);
+$('childName').value=localStorage.getItem('lina_name')||'';
+const stories=[
+'Pembe bulutların üstünde minik bir yıldız yaşarmış. Her gece çocuklara iyi uykular dermiş. Bir gün ışığı azalmış, ama Lina ona gülümseyince yıldız yeniden parlamış. Çünkü sevgi, ışığı çoğaltırmış.',
+'Ormanda minik bir tavşan varmış. Tavşan zıplamayı çok severmiş ama bir gün yolunu kaybetmiş. Lina ona mavi çiçekleri takip etmesini söylemiş ve tavşan yuvasına dönmüş.',
+'Küçük ayıcık kırmızı balonunu kaybetmiş. Lina gökyüzüne bakmış, balon ağaca takılmış. Rüzgar usulca esmiş ve balon ayıcığa geri dönmüş.',
+'Denizin altında minik bir deniz yıldızı varmış. Parlamayı unutmuş. Lina ona “Sen çok değerlisin” demiş. Deniz yıldızı mutlu olmuş ve suyun içinde pırıl pırıl parlamış.'
+];
+const goodNight=[
+'İyi geceler minik yıldız. Gözlerini yavaşça kapat. Bulutlar yumuşacık bir yastık olsun, ay dede sana gülümsesin. Lina burada, tatlı rüyalar.',
+'Bir varmış bir yokmuş, uyku perisi minik yıldızları toplamış. Her yıldız bir güzel rüya olmuş. En parlak rüya da senin yastığına konmuş. İyi geceler.',
+'Küçük tavşan yuvasına girmiş, ayıcık battaniyesini çekmiş, kuşlar sessizce uyumuş. Lina da fısıldamış: tatlı rüyalar minik arkadaşım.'
+];
+const riddles=[
+{q:'Dört ayağı var ama yürüyemez. Üstüne otururuz. Nedir?',a:'Sandalye'},
+{q:'Sarıdır, gökyüzünde parlar, bizi ısıtır. Nedir?',a:'Güneş'},
+{q:'Miyav der, süt sever, minik patileri vardır. Nedir?',a:'Kedi'},
+{q:'Gece çıkar, ışık verir, bazen yarım bazen tam görünür. Nedir?',a:'Ay'}
+];
+const blocked=['adres','telefon','şifre','kredi kartı','tc kimlik','korku','kan','silah','ölüm','kaçır','para gönder','çıplak','öpüş','zarar ver','kes','ilaç iç'];
+function name(){return localStorage.getItem('lina_name')||'minik arkadaşım'}
+function setBubble(s){bubble.textContent=s}
+function add(role,msg){const d=document.createElement('div');d.className='msg '+(role==='kid'?'kid':'bot');d.textContent=msg;log.appendChild(d);log.scrollTop=log.scrollHeight}
+function score(n=1){points+=n;localStorage.setItem('lina_points',points);drawScore()}
+function drawScore(){ $('score').textContent=points; $('fill').style.width=Math.min(100,(points%10)*10)+'%'; const full=Math.min(5,Math.floor((points%50)/10)); $('starIcons').textContent='★★★★★'.slice(0,full)+'☆☆☆☆☆'.slice(0,5-full)}
+function safeLocal(input){const l=input.toLocaleLowerCase('tr-TR');return !blocked.some(w=>l.includes(w))}
+function localReply(input){
+ const l=input.toLocaleLowerCase('tr-TR');
+ if(!safeLocal(input)) return 'Bu konu küçük çocuklar için uygun değil tatlım. Gel masal, bilmece, renkler, sayılar veya hayvanlar hakkında konuşalım.';
+ if(l.includes('benim adım')||l.includes('adım ')){const m=input.match(/ad[ıi]m\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)/i); if(m&&m[1]){localStorage.setItem('lina_name',m[1]);$('childName').value=m[1];score(2);return `Memnun oldum ${m[1]}! Sana iki yıldız verdim.`}}
+ if(l.includes('uyku')||l.includes('iyi geceler')){sleep=true;stage.classList.add('sleep');return goodNight[Math.floor(Math.random()*goodNight.length)]}
+ if(l.includes('masal')||l.includes('hikaye')){score(1);return stories[Math.floor(Math.random()*stories.length)]}
+ if(l.includes('bilmece')||l.includes('oyun')){score(1);return riddles[Math.floor(Math.random()*riddles.length)].q}
+ if(l.includes('hayvan')||l.includes('kedi')||l.includes('köpek')||l.includes('tavşan')){score(1);return 'Hayvan oyunu! Kedi miyav der, köpek hav hav der, tavşan zıp zıp zıplar. Sen hangi hayvanı seversin?'}
+ if(l.includes('renk')||l.includes('pembe')||l.includes('mavi')||l.includes('sarı')){score(1);return 'Renk oyunu! Ben pembe fiyonk, mavi gökyüzü ve sarı güneş görüyorum. Sen hangi rengi görüyorsun?'}
+ if(l.includes('sayı')||l.includes('say')){score(1);return 'Sayalım: bir, iki, üç, dört, beş, altı! Harikasın!'}
+ if(l.includes('şarkı')){score(1);return 'La la laaa! Günaydın güneş, merhaba çiçek, bugün oyun çok güzel geçecek!'}
+ if(l.includes('üzgün')||l.includes('ağla')) return `Üzülme ${name()}. Derin nefes alalım: bir... iki... üç... Lina yanında.`;
+ return [`Çok güzel söyledin ${name()}! İstersen masal anlatayım.`,`Harika! Sana bir bilmece sorabilirim.`,`Ben bunu çok sevdim. Bir yıldız daha kazanmak ister misin?`,`Renkler, hayvanlar, sayılar veya uyku hikayesi seçebilirsin.`][Math.floor(Math.random()*4)]
+}
+async function aiReply(input){
+ try{
+   const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:input, childName:name(), points})});
+   if(!r.ok) throw new Error('api yok');
+   const data=await r.json(); if(data.points) score(data.points); return data.reply || localReply(input);
+ }catch(e){ return localReply(input) }
+}
+async function respond(input){
+ const out=aiOn?await aiReply(input):localReply(input);
+ add('bot',out); setBubble(out); speak(out);
+}
+function send(){const s=text.value.trim(); if(!s)return; add('kid',s); text.value=''; respond(s)}
+function quick(s){add('kid',s); respond(s)}
+function sleepMode(){sleep=true;stage.classList.add('sleep'); quick('Uyku modu iyi geceler hikayesi')}
+function saveName(){const n=$('childName').value.trim(); if(!n)return; localStorage.setItem('lina_name',n); const out=`Tamam ${n}! Lina seni bu cihazda hatırlayacak.`; add('bot',out); setBubble(out); speak(out); score(2)}
+function toggleVoice(){voiceOn=!voiceOn;$('voiceBtn').textContent=voiceOn?'🔊':'🔇';$('voiceBtn').classList.toggle('on',voiceOn); if(!voiceOn&&speechSynthesis)speechSynthesis.cancel()}
+function toggleAI(){aiOn=!aiOn;$('aiBtn').classList.toggle('on',aiOn); const out=aiOn?'ChatGPT modu denenecek. Sunucu bağlantısı yoksa güvenli yerel mod devam eder.':'Yerel güvenli moda geçtim.'; add('bot',out); setBubble(out); speak(out)}
+async function speak(msg){
+ robot.classList.add('speaking');
+ if(voiceOn){
+   try{
+     if(aiOn){
+       const r=await fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:msg})});
+       if(r.ok){const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=new Audio(url); a.onended=()=>robot.classList.remove('speaking'); a.onerror=()=>robot.classList.remove('speaking'); await a.play(); return}
+     }
+   }catch(e){}
+   if('speechSynthesis' in window){speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(msg);u.lang='tr-TR';u.rate=1.03;u.pitch=1.62;u.volume=.95;u.onend=()=>robot.classList.remove('speaking');u.onerror=()=>robot.classList.remove('speaking');speechSynthesis.speak(u);return}
+ }
+ setTimeout(()=>robot.classList.remove('speaking'),Math.min(6500,1200+msg.length*35))
+}
+async function toggleRecording(){
+ const micBtn=document.getElementById('micBtn');
+ if(isRecording){ stopRecording(); return; }
+ try{
+   stream=await navigator.mediaDevices.getUserMedia({audio:true});
+   chunks=[];
+   const preferred=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':(MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'');
+   mediaRecorder=new MediaRecorder(stream, preferred?{mimeType:preferred}:undefined);
+   mediaRecorder.ondataavailable=e=>{ if(e.data&&e.data.size>0) chunks.push(e.data); };
+   mediaRecorder.onstop=uploadAudio;
+   mediaRecorder.start();
+   isRecording=true; micBtn.classList.add('recording'); micBtn.textContent='⏹️';
+   bubble.textContent='Dinliyorum... Konuşman bitince mikrofona tekrar bas.';
+ }catch(e){
+   const out='Mikrofon izni alınamadı. Safari ayarlarından mikrofon iznini kontrol edelim.';
+   add('bot',out); bubble.textContent=out; speak(out);
+ }
+}
+function stopRecording(){
+ const micBtn=document.getElementById('micBtn');
+ if(mediaRecorder&&isRecording) mediaRecorder.stop();
+ if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+ isRecording=false; micBtn.classList.remove('recording'); micBtn.textContent='🎙️';
+ bubble.textContent='Söylediğini yazıya çeviriyorum...';
+}
+async function uploadAudio(){
+ try{
+   const blob=new Blob(chunks,{type:chunks[0]?.type||'audio/webm'});
+   const fd=new FormData();
+   fd.append('audio',blob,blob.type.includes('mp4')?'recording.mp4':'recording.webm');
+   const r=await fetch('/api/transcribe',{method:'POST',body:fd});
+   if(!r.ok) throw new Error(await r.text());
+   const data=await r.json();
+   const said=(data.text||'').trim();
+   if(!said){ const out='Seni tam anlayamadım tatlım. Bir daha kısa söyleyelim mi?'; add('bot',out); bubble.textContent=out; speak(out); return; }
+   add('kid',said); bubble.textContent='Duydum: '+said; respond(said);
+ }catch(e){
+   console.warn(e); const out='Sesi yazıya çevirirken zorlandım. Bir daha deneyelim mi?'; add('bot',out); bubble.textContent=out; speak(out);
+ }
+}
+drawScore(); const hello=localStorage.getItem('lina_name')?`Merhaba ${name()}! Bugün masal mı anlatalım?`:'Merhaba minik arkadaşım! Ben Lina. Bugün beraber ne oynayalım?'; add('bot',hello); setBubble(hello); setTimeout(()=>speak(hello),450);
+</script>
+</body>
+</html>
