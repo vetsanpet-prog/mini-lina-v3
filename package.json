@@ -1,0 +1,9 @@
+{
+  "name": "lina-v6-elif-sare",
+  "version": "6.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "formidable": "^3.5.2"
+  }
+}
