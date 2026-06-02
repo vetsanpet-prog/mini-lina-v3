@@ -80,6 +80,30 @@ let mediaRecorder=null,chunks=[],stream=null,isRecording=false,history=[];
 function setBubble(t){bubble.textContent=t}
 function anim(on){robot.classList.toggle('speaking',!!on)}
 async function speak(text){
+ setBubble(text);
+ anim(true);
+
+ if ('speechSynthesis' in window) {
+   speechSynthesis.cancel();
+
+   const u = new SpeechSynthesisUtterance(text);
+   u.lang = 'tr-TR';
+   u.rate = 0.95;
+   u.pitch = 1.55;
+   u.volume = 1;
+
+   u.onend = () => anim(false);
+   u.onerror = () => anim(false);
+
+   setTimeout(() => {
+     speechSynthesis.speak(u);
+   }, 200);
+
+   return;
+ }
+
+ setTimeout(() => anim(false), 3500);
+}
  setBubble(text); anim(true);
  try{
    const r=await fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
