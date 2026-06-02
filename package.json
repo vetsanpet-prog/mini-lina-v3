@@ -1,9 +1,0 @@
-{
-  "name": "lina-v5-fixed",
-  "version": "5.0.0",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "formidable": "^3.5.2"
-  }
-}
