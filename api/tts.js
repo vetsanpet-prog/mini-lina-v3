@@ -14,7 +14,7 @@ export default async function handler(req,res){
       },
       body:JSON.stringify({
         model:"tts-1",
-        voice:process.env.OPENAI_TTS_VOICE || "nova",
+        voice:process.env.OPENAI_TTS_VOICE || "shimmer",
         input:text,
         response_format:"mp3"
       })
