@@ -1,3 +1,3 @@
-# Lina V6 Elif Sare
+# Lina V7 Safari Temiz
 
-Temiz sürüm: sadece robot + mikrofon. Elif Sare adı gömülü.
+Chrome/iPhone fallback sesi kapalı. Safari ana ekran için temiz sürüm.
