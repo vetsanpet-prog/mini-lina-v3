@@ -16,7 +16,11 @@ export default async function handler(req, res) {
     });
     const data = await r.json();
     if (!r.ok) return res.status(r.status).json(data);
-    const reply = data.output_text || "Bunu oyun gibi düşünelim mi? Sana bir bilmece sorabilirim.";
+    const reply =
+  data.output_text ||
+  data.output?.flatMap(o => o.content || []).map(c => c.text || c.output_text || "").join(" ").trim() ||
+  data.choices?.[0]?.message?.content ||
+  "Seni duydum tatlım. Buna birlikte bakalım mı?";
     res.status(200).json({ reply });
   } catch (e) { res.status(500).json({ error: e.message }); }
 }
