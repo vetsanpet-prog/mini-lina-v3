@@ -26,10 +26,10 @@ export default async function handler(req,res){
         "Content-Type":"application/json"
       },
       body:JSON.stringify({
-        model:process.env.OPENAI_MODEL || "gpt-4o-mini",
+        model: "gpt-4.1-nano",
         messages,
-        temperature:0.55,
-        max_tokens:220
+        temperature:0.3,
+        max_tokens:80
       })
     });
 
